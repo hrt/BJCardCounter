@@ -1,5 +1,5 @@
 CC      = gcc
-CFLAGS  = -g -std=c99 -Wall -Werror #-O3
+CFLAGS  = -std=c99 -Wall -Werror -O3
 HEADERS = entropy.h pcg_spinlock.h pcg_variants.h
 
 .SUFFIXES: .c .h
