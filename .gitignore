@@ -6,7 +6,6 @@
 !Makefile
 !*.c
 !*.h
-!*.a
 
 # ...even if they are in subdirectories
 !*/
