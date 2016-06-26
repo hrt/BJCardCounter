@@ -15,7 +15,7 @@
             pcg32s_boundedrand_r(&rng, bound)
 #define NUMBER_OF_DECKS 8
 #define CARDS_PER_DECK 52
-#define NTIMES 50
+#define NTIMES 20
 
 typedef struct {
 	size_t size;
@@ -28,10 +28,18 @@ void initialiseDeck(void);
 void addCardToDeck(int c);
 int dealCard(void);
 int calculateHand(int* cards, int handSize);
+int calculateHandHelper(int* cards, int start, int end);
+int calculateHandHelper2(int* cards, int start, int end);
 int simulateGame(int playerHandSize, int* player, int dealerHandSize, int* dealer, int hasSplit, int hasInsured);
 int simulateDealer(int* dealer);
 int simulateSplit(int* player,int* dealer);
 void removeCardFromDeck(int c);
+/* 
+  CALCULATE HAND MUST BE IMPLEMENTED RECURSIVLEY
+  SINCE THE HAND 11 10 11 WILL BE CONSIDERED TO BE 22
+  BUT IN REALITY ITS VALUE IS 12
+
+*/
 
 
 XX_RAND_DECL
@@ -73,6 +81,7 @@ int main() {
 			player[playerHandSize++] = z;
 		} else if (c == 'd') {
 			// deal dealer
+			removeCardFromDeck(z);
 			dealer[0] = z;
 		} else if (c == 's') {
 			int v = simulateGame(playerHandSize, player, 1, dealer, 0, 0);
@@ -150,6 +159,10 @@ int simulateGame(int playerHandSize, int* player, int dealerHandSize, int* deale
 	int currentMove = 0;
 	/* 0, 1, 2, 3, 4 */
 	/* stand, hit, double, insure, split */
+	if (playerHandSize > 24) {
+		int s =0;
+		s += 1;
+	}
 
 	if (currentValue >= 19) {
 		// return value of standing NTIMES times
@@ -243,6 +256,7 @@ int simulateGame(int playerHandSize, int* player, int dealerHandSize, int* deale
 }
 
 int simulateSplit(int* player1, int* dealer) {
+	int originalSize = deck->size;
 	int player1HandSize = 2;
 	int player2HandSize = 2;
 	int* player2 = malloc(sizeof(int) * 22);
@@ -281,7 +295,7 @@ int simulateSplit(int* player1, int* dealer) {
 
 	player1[1] = player1[0];
 	free(player2);
-	deck->size += player1HandSize + player2HandSize - 4;
+	deck->size = originalSize;
 	return avg;
 }
 
@@ -305,15 +319,40 @@ int simulateDealer(int* dealer) {
 
 
 int calculateHand(int* cards, int handSize) {
-	int val = 0;
-	for (int i = 0; i < handSize; i++) {
-		if (cards[i] == 11 && val > 10) {
-			val += 1;
+	return calculateHandHelper(cards, 0, handSize);
+}
+
+/* 7 11 11 3*/
+/*    12    */
+/*    22    */
+int calculateHandHelper(int* cards, int start, int end) {
+	int v = 0;
+	for (int i = start; i < end; i++) {
+		if (cards[i] == 11) {
+			v += calculateHandHelper2(cards, i + 1, end);
+			if (v > 10) {
+				v += 1;
+			} else {
+				v += 11;
+			}
+			break;
 		} else {
-			val += cards[i];
+			v += cards[i];
 		}
 	}
-	return val;
+	return v;
+}
+
+int calculateHandHelper2(int* cards, int start, int end) {
+	int v = 0;
+	for (int i = start; i < end; i++) {
+		if (cards[i] == 11) {
+			v += 1;
+		} else {
+			v += cards[i];
+		}
+	}
+	return v;
 }
 
 int dealCard(void) {

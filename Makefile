@@ -1,5 +1,5 @@
 CC      = gcc
-CFLAGS  = -std=c99 -Wall -Werror -O3
+CFLAGS  = -g -std=c99 -Wall -Werror #-O3
 HEADERS = entropy.h pcg_spinlock.h pcg_variants.h
 
 .SUFFIXES: .c .h
@@ -8,7 +8,7 @@ HEADERS = entropy.h pcg_spinlock.h pcg_variants.h
 count: 
 	$(CC) CardCount.c entropy.c $(HEADERS) libpcg_random.a $(CFLAGS) -o $@
 basicStrat:
-	$(CC) CardCount.c entropy.c $(HEADERS) libpcg_random.a $(CFLAGS) -o $@
+	$(CC) BasicStrategy.c entropy.c $(HEADERS) libpcg_random.a $(CFLAGS) -o $@
 
 clean:
 	rm -f count
