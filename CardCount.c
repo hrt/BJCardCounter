@@ -61,8 +61,8 @@ int main() {
 		char str[100];
 		int zs[100];
 		printf("input card\n");
-		scanf("%s %d", str, zs);
-		int z = zs[0];
+		int z = scanf("%s %d", str, zs);
+		z = zs[0];
 		char c = str[0];
 		if (c == 'b') {
 			// burn
