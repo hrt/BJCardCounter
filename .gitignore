@@ -1,0 +1,15 @@
+# Ignore everything
+*
+
+# But not these files..
+!.gitignore
+!Makefile
+!*.c
+!*.h
+!*.a
+
+# ...even if they are in subdirectories
+!*/
+
+# Ignore testsuite
+arm11_1516_testsuite/
