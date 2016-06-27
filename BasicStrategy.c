@@ -122,8 +122,7 @@ int main(void) {
 				int pv = calculateHand(player, playerHandSize);
 				int pv2 = calculateHand(player2, player2HandSize);
 				int dv = simulateDealer(dealer);
-				int v = compareHands(pv, dv, playerHandSize);
-				v += compareHands(pv2, dv, player2HandSize);
+				int v = compareHands(pv, dv, playerHandSize) + compareHands(pv2, dv, player2HandSize);
 				if (v < 0) {
 					losses -= betSize * v;
 				} else if (v > 0) {
