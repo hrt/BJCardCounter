@@ -15,8 +15,8 @@
             pcg32s_boundedrand_r(&rng, bound)
 #define NUMBER_OF_DECKS 8
 #define CARDS_PER_DECK 52
-#define NUMBER_OF_SHOES 1000000
-#define NUMBER_OF_HANDS 50
+#define NUMBER_OF_SHOES 10000000
+#define NUMBER_OF_HANDS 20
 
 typedef struct {
 	size_t size;
@@ -362,6 +362,7 @@ int calculateHand(int* cards, int handSize) {
 /*    22    */
 int calculateHandHelper(int* cards, int start, int end) {
 	int v = 0;
+	soft = 0;
 	for (int i = start; i < end; i++) {
 		if (cards[i] == 11) {
 			v += calculateHandHelper2(cards, i + 1, end);
@@ -370,7 +371,6 @@ int calculateHandHelper(int* cards, int start, int end) {
 				soft = 0;
 			} else {
 				v += 11;
-				soft = 1;
 			}
 			break;
 		} else {
