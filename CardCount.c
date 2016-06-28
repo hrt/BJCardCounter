@@ -84,6 +84,7 @@ int main() {
 			// deal dealer
 			removeCardFromDeck(z);
 			dealer[0] = z;
+			dealer[1] = dealCard();
 		} else if (c == 's') {
 			int v = simulateGame(playerHandSize, player, 1, dealer, 0, 0);
 			switch (move) {
@@ -301,14 +302,13 @@ int simulateSplit(int* player1, int* dealer) {
 }
 
 int simulateDealer(int* dealer) {
-	simulations += 1;
-	int dealerHandSize = 1;
+	int dealerHandSize = 2;
 	int dv = calculateHand(dealer, dealerHandSize);
 	while (dv < 17) {
 		dealer[dealerHandSize++] = dealCard();
 		dv = calculateHand(dealer, dealerHandSize);
 	}
-	deck->size += dealerHandSize - 1;
+	deck->size += dealerHandSize - 2;
 	if (dealerHandSize == 2 && dv == 21) {
 		return 100;
 	} else if (dv > 21) {
