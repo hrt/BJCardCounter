@@ -147,7 +147,7 @@ int basicStrategy(int* player, int playerHandSize, int* dealer) {
 	if (player[0] == player[1] && playerHandSize == 2) {
 		if (player[0] == 11) {
 			if (dealer[0] == 11) {
-				return 1;
+				return 4;
 			} else {
 				return 4;
 			}
