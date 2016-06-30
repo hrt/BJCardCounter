@@ -15,6 +15,9 @@
             pcg32s_boundedrand_r(&rng, bound)
 #define NUMBER_OF_DECKS 8
 #define CARDS_PER_DECK 52
+            // 100000
+#define NUMBER_OF_SHOES 100
+#define NUMBER_OF_HANDS 10
 #define NTIMES 2
 typedef struct {
 	size_t size;
@@ -45,7 +48,140 @@ clock_t begin, end;
 double time_spent;
 int* yz;
 
-int main() {
+/*
+TO BEAT
+W : 198324892
+L : 205116284
+EV: 49.158317
+T : 35.305000
+*/
+int main () {
+	initialRNG();
+	deck = allocDeck();
+	begin = clock();
+	int* dealer = malloc(sizeof(int) * 18);
+	int* player = malloc(sizeof(int) * 22);
+	player2 = malloc(sizeof(int) * 22);
+	values = malloc(sizeof(int) * 5);
+
+	int wins = 0;
+	int losses = 0;
+
+	for (int i = 0; i < NUMBER_OF_SHOES; i++) {
+		initialiseDeck();
+		for (int j = 0; j < NUMBER_OF_HANDS; j++) {
+			int betSize = 1;
+			int playerHandSize = 0;
+			player[playerHandSize++] = dealCard();
+			dealer[0] = dealCard();
+			player[playerHandSize++] = dealCard();
+			int faceDown = dealCard();
+
+			int val = simulateGame(player, playerHandSize, dealer, 0);
+			dealer[1] = faceDown;
+			
+			if (move == 2) {
+				betSize *= 2;
+				player[playerHandSize++] = dealCard();
+				int pv = calculateHand(player, playerHandSize);
+				int dv = simulateDealer(dealer);
+				int v = compareHands(pv, dv, playerHandSize, 0);
+				if (v < 0) {
+					losses -= betSize * v;
+				} else if (v > 0) {
+					wins += betSize * v;
+				}
+			} else if (move == 0) {
+				int pv = calculateHand(player, playerHandSize);
+				int dv = simulateDealer(dealer);
+				int v = compareHands(pv, dv, playerHandSize, 0);
+				if (v < 0) {
+					losses -= betSize * v;
+				} else if (v > 0) {
+					wins += betSize * v;
+				}
+			} else if (move == 1) {
+				while(move != 0) {
+					player[playerHandSize++] = dealCard();
+					val = simulateGame(player, playerHandSize, dealer, 0);
+				}
+				dealer[1] = faceDown;
+				int pv = calculateHand(player, playerHandSize);
+				int dv = simulateDealer(dealer);
+				int v = compareHands(pv, dv, playerHandSize, 0);
+				if (v < 0) {
+					losses -= betSize * v;
+				} else if (v > 0) {
+					wins += betSize * v;
+				}
+			} else if (move == 3) {
+				// account for aces and double downs
+				int player2HandSize = 0;
+				player2[player2HandSize++] = player[0];
+				playerHandSize = 1;
+				int multiplier1 = 1;
+				int multiplier2 = 1;
+
+				player2[player2HandSize++] = dealCard();
+				player[playerHandSize++] = dealCard();
+
+				if (player[0] == 11) {
+
+				} else {
+					val = simulateGame(player, playerHandSize, dealer, 1);
+					while(move != 0) {
+						if (move == 1) {
+							player[playerHandSize++] = dealCard();
+							val = simulateGame(player, playerHandSize, dealer, 1);
+						} else if (move == 2) {
+							multiplier1 = 2;
+							player[playerHandSize++] = dealCard();
+							break;
+						}
+					}
+
+					val = simulateGame(player2, player2HandSize, dealer, 1);
+					while (move != 0) {
+						if (move == 1) {
+							player2[player2HandSize++] = dealCard();
+							val = simulateGame(player2, player2HandSize, dealer, 1);
+						} else if (move == 2) {
+							multiplier2 = 2;
+							player2[player2HandSize++] = dealCard();
+							break;
+						}
+					}
+				}
+
+				dealer[1] = faceDown;
+				int dv = simulateDealer(dealer);
+				int pv1 = calculateHand(player, playerHandSize);
+				int pv2 = calculateHand(player2, player2HandSize);
+				val = compareHands(pv1, dv, playerHandSize, 1) * multiplier1;
+				val += compareHands(pv2, dv, player2HandSize, 1) * multiplier2;
+
+				if (val > 0) {
+					wins += val * betSize;
+				} else if (val < 0) {
+					losses -= val * betSize;
+				}
+
+				player[1] = player[0];
+			}
+		}
+	}
+
+	printf("W : %d\n", wins);
+	printf("L : %d\n", losses);
+	printf("EV: %f\n", (((double) wins) / ((double) wins + (double) losses)) * 100);
+	end = clock();
+	time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("T : %f\n", time_spent);
+	return 0;
+}
+
+
+/*int main() {
 
 	initialRNG();
 	deck = allocDeck();
@@ -129,14 +265,16 @@ int main() {
 		}
 	}
 	return 0;
-}
+}*/
 int simulateGame(int* player, int playerHandSize, int* dealer, int hasSplit) {
+	clock_t begin2;
+	begin2 = clock();
 	values[0] = 0;
 	values[1] = -2147000000;
 	values[2] = -2147000000;
 	values[3] = -2147000000;
 
-	if (playerHandSize == 2) {
+	if (playerHandSize == 2 && !hasSplit) {
 		if (player[0] == player[1]) {
 			values[3] = 0;
 		}
@@ -150,15 +288,16 @@ int simulateGame(int* player, int playerHandSize, int* dealer, int hasSplit) {
 	if (cv < 12) {
 		values[0] = -2147000000;
 	}
-	int k = 10;
+	int TIME_TO_SPEND = 10;
 	double time_spent2 = 0;
-	while (1) {
+	for (int i = 0; i < 10000; i++) {
 		dealer[1] = dealCard();
 		simulateGameAuxilery(player, playerHandSize, dealer, hasSplit, 1);
 		deck->size += 1;
 		end = clock();
-		time_spent = ((double)(end - begin) / CLOCKS_PER_SEC) - time_spent2;
-		if (time_spent > k) {
+		time_spent = ((double)(end - begin2) / CLOCKS_PER_SEC) - time_spent2;
+		if (time_spent > TIME_TO_SPEND) {
+			/*
 			clock_t begin2, end2;
 			begin2 = clock();
 			printf("Continue? (How much longer to spend) : \n");
@@ -169,7 +308,9 @@ int simulateGame(int* player, int playerHandSize, int* dealer, int hasSplit) {
 			}
 			end2 = clock();
 			time_spent2 += (double)(end2 - begin2) / CLOCKS_PER_SEC;
-			k += z;
+			TIME_TO_SPEND += z;
+			*/
+			break; // remove
 		}
 	}
 

@@ -54,4 +54,4 @@
     #define PCG_SPINLOCK_UNLOCK(mutex)  mutex = 0;
 #endif
 
-#endif // PCG_SPINLOCK_H_INCLUDED
+#endif

@@ -15,8 +15,8 @@
             pcg32s_boundedrand_r(&rng, bound)
 #define NUMBER_OF_DECKS 8
 #define CARDS_PER_DECK 52
-#define NUMBER_OF_SHOES 10000000
-#define NUMBER_OF_HANDS 20
+#define NUMBER_OF_SHOES 100
+#define NUMBER_OF_HANDS 10
 
 typedef struct {
 	size_t size;
@@ -39,6 +39,7 @@ int compareHands(int pv, int dv, int playerHandSize);
 int soft;
 XX_RAND_DECL
 deck_t* deck;
+int count;
 
 int main(void) {
 	clock_t begin, end;
@@ -46,6 +47,7 @@ int main(void) {
 	initialRNG();
 	deck = allocDeck();
 	begin = clock();
+	count = 0;
 	int* dealer = malloc(sizeof(int) * 18);
 	int* player = malloc(sizeof(int) * 22);
 	int wins = 0;
@@ -107,17 +109,22 @@ int main(void) {
 				player2[player2HandSize++] = dealCard();
 				player[playerHandSize++] = dealCard();
 
-				int move2 = basicStrategy(player, playerHandSize, dealer);
-				while (move2 != 0) {
-					player[playerHandSize++] = dealCard();
-					move2 = basicStrategy(player, playerHandSize, dealer);
+				if (player[0] == 11) {
+
+				} else {
+					int move2 = basicStrategy(player, playerHandSize, dealer);
+					while (move2 != 0) {
+						player[playerHandSize++] = dealCard();
+						move2 = basicStrategy(player, playerHandSize, dealer);
+					}
+
+					int move3 = basicStrategy(player2, player2HandSize, dealer);
+					while (move3 != 0) {
+						player2[player2HandSize++] = dealCard();
+						move3 = basicStrategy(player2, player2HandSize, dealer);
+					}
 				}
 
-				int move3 = basicStrategy(player2, player2HandSize, dealer);
-				while (move3 != 0) {
-					player2[player2HandSize++] = dealCard();
-					move3 = basicStrategy(player2, player2HandSize, dealer);
-				}
 
 				int pv = calculateHand(player, playerHandSize);
 				int pv2 = calculateHand(player2, player2HandSize);
@@ -138,11 +145,13 @@ int main(void) {
 	printf("EV: %f\n", (((double) wins) / ((double) wins + (double) losses)) * 100);
 	end = clock();
 	time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("C : %d\n", count);
 	printf("T : %f\n", time_spent);
 	return 0;
 }
 
 int basicStrategy(int* player, int playerHandSize, int* dealer) {
+	count += 1;
 	int pv = calculateHand(player, playerHandSize);
 	if (player[0] == player[1] && playerHandSize == 2) {
 		if (player[0] == 11) {
