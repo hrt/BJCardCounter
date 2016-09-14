@@ -13,8 +13,6 @@
             pcg32s_srandom_r(&rng, __VA_ARGS__)
 #define XX_RANDOM()                 \
             pcg32s_random_r(&rng)
-// #define XX_BOUNDEDRAND(bound)       \
-//             pcg32s_boundedrand_r(&rng, bound)
 #define XX_BOUNDEDRAND(bound)       \
             (rand() % bound)
 #define addCardToDeck(card)       \
