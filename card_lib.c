@@ -14,7 +14,7 @@
 #define XX_RANDOM()                 \
             pcg32s_random_r(&rng)
 #define XX_BOUNDEDRAND(bound)       \
-            (rand() % bound)
+            (rand() % (bound))
 #define addCardToDeck(card)       \
             (deck->cards[deck->size++] = card)
 
