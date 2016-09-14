@@ -1,13 +1,17 @@
 CC      = gcc
-CFLAGS  = -std=c99 -Wall -Werror -g
-HEADERS = entropy.h pcg_spinlock.h pcg_variants.h
+CFLAGS  = -std=c99 -Wall -Werror
 
 .SUFFIXES: .c .h
 
 count: 
-	$(CC) Main.c entropy.c $(HEADERS) libpcg_random.a $(CFLAGS) -o count
-	$(CC) card_lib_tests.c entropy.c $(HEADERS) libpcg_random.a $(CFLAGS) -o tests_card
-	$(CC) hand_lib_tests.c entropy.c $(HEADERS) libpcg_random.a $(CFLAGS) -o tests_hand
+	$(CC) Main.c $(CFLAGS) -O3 -o count
+	$(CC) card_lib_tests.c $(CFLAGS) -O3 -o tests_card
+	$(CC) hand_lib_tests.c $(CFLAGS) -O3 -o tests_hand
+
+debug: 
+	$(CC) Main.c $(CFLAGS) -g -o count
+	$(CC) card_lib_tests.c $(CFLAGS) -g -o tests_card
+	$(CC) hand_lib_tests.c $(CFLAGS) -g -o tests_hand
 
 clean:
 	rm -f test

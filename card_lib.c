@@ -2,19 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h>
-#include "pcg_variants.h"
-#include "entropy.h"
 #define NUMBER_OF_DECKS 8
-#define XX_RAND_DECL                pcg32s_random_t rng;
-#define XX_SEEDSDECL(seeds)         uint64_t seeds[1];
-#define XX_SRANDOM_SEEDARGS(seeds)  seeds[0]
-#define XX_SRANDOM_SEEDCONSTS       42u
-#define XX_SRANDOM(...)             \
-            pcg32s_srandom_r(&rng, __VA_ARGS__)
-#define XX_RANDOM()                 \
-            pcg32s_random_r(&rng)
 #define XX_BOUNDEDRAND(bound)       \
-            pcg32s_boundedrand_r(&rng, (bound))
+            (rand() % (bound))
 #define addCardToDeck(card)       \
             (deck->cards[deck->size++] = card)
 
@@ -33,7 +23,6 @@ void removeCardFromDeck(int position);
 void removeCardTypeFromDeck(int c);
 int dealCard(void);
 
-XX_RAND_DECL
 deck_t* deck;
 
 
@@ -100,8 +89,6 @@ void allocDeck(void)
 
 void initialRNG(void) 
 {
-  XX_SEEDSDECL(seeds)
-  entropy_getbytes((void*) seeds, sizeof(seeds)); 
-  XX_SRANDOM(XX_SRANDOM_SEEDARGS(seeds));
+  srand(time(NULL));
 }
 
