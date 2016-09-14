@@ -141,7 +141,7 @@ int removeCardFromDeck_SwapTest()
   for (int i = (52*8 - 1); i >= 0; i--) 
   {
     int randomPosition = XX_BOUNDEDRAND(i+1);
-    printf("%d\n", randomPosition);
+    randomPosition += 2;
 
     // int sourceCard = deck->cards[i];
     // int destinationCard = deck->cards[randomPosition];
