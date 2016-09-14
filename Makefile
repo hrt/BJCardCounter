@@ -1,18 +1,19 @@
 CC      = gcc
-CFLAGS  = -std=c99 -Wall -Werror -O3
+CFLAGS  = -std=c99 -Wall -Werror -g
 HEADERS = entropy.h pcg_spinlock.h pcg_variants.h
 
 .SUFFIXES: .c .h
 
-
 count: 
-	$(CC) CardCount.c entropy.c $(HEADERS) libpcg_random.a $(CFLAGS) -o $@
-basicStrat:
-	$(CC) BasicStrategy.c entropy.c $(HEADERS) libpcg_random.a $(CFLAGS) -o $@
+	$(CC) Main.c entropy.c $(HEADERS) libpcg_random.a $(CFLAGS) -o count
+	$(CC) card_lib_tests.c entropy.c $(HEADERS) libpcg_random.a $(CFLAGS) -o tests_card
+	$(CC) hand_lib_tests.c entropy.c $(HEADERS) libpcg_random.a $(CFLAGS) -o tests_hand
 
 clean:
+	rm -f test
 	rm -f count
-	rm -f basicStrat
-	rm -f *.txt
+	rm -f count.txt
+	rm -f tests_card
+	rm -f tests_hand
 
-.PHONY: all clean basicStrat
+.PHONY: all clean
