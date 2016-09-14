@@ -20,7 +20,7 @@ int main()
   someTestsFailed += initialiseDeck_CardsTest();
 
   someTestsFailed += removeCardFromDeck_SizeTest();
-  // someTestsFailed += removeCardFromDeck_SwapTest();
+  someTestsFailed += removeCardFromDeck_SwapTest();
 
   // someTestsFailed += dealCard_SizeTest();
   // someTestsFailed += dealCard_CardsTest();
