@@ -88,7 +88,7 @@ int main()
       printf("Simulating..\n");
       simulation_t* simulation = malloc(sizeof(simulation_t));
       simulateGame(simulation);
-      printf("EV       : %.3f\% \n", ((double) simulation->value / (double) simulation->count) * 50);
+      printf("EV       : %.3f%% \n", ((double) simulation->value / (double) simulation->count) * 50);
       printf("Playouts : %d\n", simulation->count);
       printf("left    : %d\n", (int) deck->size);
       free(simulation);
