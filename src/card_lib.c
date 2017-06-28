@@ -1,30 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <limits.h>
-#define NUMBER_OF_DECKS 8
-#define XX_BOUNDEDRAND(bound)       \
-            (rand() % (bound))
-#define addCardToDeck(card)       \
-            (deck->cards[deck->size++] = card)
-
-typedef struct 
-{
-  size_t size;
-  int* cards;
-} deck_t;
-
-
-void initialRNG(void);
-void allocDeck(void);
-void initialiseDeck(void);
-void destroyDeck(void);
-void removeCardFromDeck(int position);
-void removeCardTypeFromDeck(int c);
-int dealCard(void);
-
-deck_t* deck;
-
+#include "card_lib.h"
 
 int dealCard(void)
 {
@@ -54,18 +28,18 @@ void removeCardTypeFromDeck(int card)
     {
       removeCardFromDeck(i);
       return;
-    } 
+    }
   }
   printf("Attempting to remove a card that does not exist in the deck..\n");
 }
 
-void destroyDeck(void) 
+void destroyDeck(void)
 {
   free(deck->cards);
   free(deck);
 }
 
-void initialiseDeck(void) 
+void initialiseDeck(void)
 {
   deck->size = 0;
   for (int i = 2; i < 10; i++)
@@ -81,13 +55,13 @@ void initialiseDeck(void)
     addCardToDeck(11);
 }
 
-void allocDeck(void) 
+void allocDeck(void)
 {
   deck = malloc(sizeof(deck_t));
   deck->cards = malloc(sizeof(int) * (52 * NUMBER_OF_DECKS));
 }
 
-void initialRNG(void) 
+void initialRNG(void)
 {
   srand(time(NULL));
 }

@@ -9,6 +9,3 @@
 
 # ...even if they are in subdirectories
 !*/
-
-# Ignore testsuite
-arm11_1516_testsuite/

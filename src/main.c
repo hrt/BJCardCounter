@@ -1,40 +1,4 @@
-#include "card_lib.c"
-#include "hand_lib.c"
-#define NUMBER_OF_SIMULATIONS 10000000
-
-typedef struct
-{
-  int value;
-  int count;
-} simulation_t;
-
-
-hand_t* player;
-hand_t* split1;
-hand_t* split2;
-hand_t* dealer;
-
-int** lookSplitTable;
-int** lookDoubleTable_SOFT;
-int** lookDoubleTable_HARD;
-int** lookHitTable_SOFT;
-int** lookHitTable_HARD;
-
-void simulateGame(simulation_t* simulation);
-void simulateDealer();
-void simulatePlayer();
-void simulateSplit(int dealerCard);
-int lookSplit(int player, int dealer);
-void initialiseLookSplitTable();
-void initialiseLookDoubleTable_SOFT();
-void initialiseLookDoubleTable_HARD();
-void initialiseLookHitTable_HARD();
-void initialiseLookHitTable_SOFT();
-void destroyLookDoubleTable_SOFT();
-void destroyLookDoubleTable_HARD();
-void destroyLookHitTable_SOFT();
-void destroyLookHitTable_HARD();
-void destroyLookSplitTable();
+#include "util.h"
 
 int main()
 {
@@ -69,8 +33,8 @@ int main()
     }
 
     switch (lineBuffer[0])
-    { 
-      case 'b' : 
+    {
+      case 'b' :
       if (inputCard > 1 && inputCard < 12)
       {
         removeCardTypeFromDeck(inputCard);
@@ -84,7 +48,7 @@ int main()
         printf("Game has been reset..\n");
       }
 
-      case 's' : 
+      case 's' :
       printf("Simulating..\n");
       simulation_t* simulation = malloc(sizeof(simulation_t));
       simulateGame(simulation);
@@ -363,7 +327,7 @@ void initialiseLookDoubleTable_HARD()
     lookDoubleTable_HARD[11][i] = 1;
     lookDoubleTable_HARD[10][i] = 1;
   }
-  
+
   lookDoubleTable_HARD[10][10] = 0;
 
   for (int i = 3; i < 7; i++)

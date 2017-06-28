@@ -1,40 +1,4 @@
-#include "card_lib.c"
-
-int initialiseDeck_SizeTest();
-int initialiseDeck_CardsTest();
-int removeCardFromDeck_SizeTest();
-int removeCardFromDeck_SwapTest();
-
-int dealCard_SizeTest();
-int dealCard_CardsTest();
-
-int removeCardTypeFromDeck_CardsTest();
-
-
-int main() 
-{
-  initialRNG();
-  int someTestsFailed = 0;
-
-  someTestsFailed += initialiseDeck_SizeTest();
-  someTestsFailed += initialiseDeck_CardsTest();
-
-  someTestsFailed += removeCardFromDeck_SizeTest();
-  someTestsFailed += removeCardFromDeck_SwapTest();
-
-  someTestsFailed += dealCard_SizeTest();
-  someTestsFailed += dealCard_CardsTest();
-
-  someTestsFailed += removeCardTypeFromDeck_CardsTest();
-
-  someTestsFailed += updateHandWithCard_CardsTest();
-
-  if (!someTestsFailed)
-  {
-    printf("All Tests Passed!\n");
-  }
-  return 0;
-}
+#include "card_lib_tests.h"
 
 int removeCardTypeFromDeck_CardsTest()
 {
@@ -54,7 +18,7 @@ int removeCardTypeFromDeck_CardsTest()
 
   if (deck->size != 10)
   {
-    printf("removeCardTypeFromDeck_SizeTest failed!\n");
+    printf("removeCardTypeFromDeck_SizeTest 1 failed!\n");
     return 1;
   }
 
@@ -62,13 +26,13 @@ int removeCardTypeFromDeck_CardsTest()
 
   if (deck->size != 9)
   {
-    printf("removeCardTypeFromDeck_SizeTest failed!\n");
+    printf("removeCardTypeFromDeck_SizeTest 2 failed!\n");
     return 1;
   }
 
   if (deck->cards[4] != 2)
   {
-    printf("removeCardTypeFromDeck_CardsTest failed!\n");
+    printf("removeCardTypeFromDeck_CardsTest 1 failed!\n");
     return 1;
   }
 
@@ -85,27 +49,27 @@ int dealCard_CardsTest()
     counts[i] = 0;
   }
 
-  for (int i = 0; i < 52; i++)
+  for (int i = 0; i < (52 * 8); i++)
   {
     counts[dealCard() - 2] += 1;
   }
 
   for (int i = 0; i < 8; i++)
   {
-    if (counts[i] != 4)
+    if (counts[i] != (4 * 8))
     {
       printf("dealCard_CardsTest failed!\n");
       return 1;
     }
   }
 
-  if (counts[8] != 16)
+  if (counts[8] != (16 * 8))
   {
     printf("dealCard_CardsTest failed!\n");
     return 1;
   }
 
-  if (counts[7] != 4)
+  if (counts[7] != (4 * 8))
   {
     printf("dealCard_CardsTest failed!\n");
     return 1;
@@ -116,12 +80,12 @@ int dealCard_CardsTest()
   return 0;
 }
 
-int dealCard_SizeTest() 
+int dealCard_SizeTest()
 {
   allocDeck();
   initialiseDeck();
 
-  for (int i = 51; i >= 0; i--) 
+  for (int i = (52*8 - 1); i >= 0; i--)
   {
     dealCard();
     if (deck->size != i)
@@ -140,7 +104,7 @@ int removeCardFromDeck_SwapTest()
   allocDeck();
   initialiseDeck();
 
-  for (int i = 51; i >= 0; i--) 
+  for (int i = (52*8 - 1); i >= 0; i--)
   {
     int randomPosition = XX_BOUNDEDRAND(i+1);
 
@@ -151,7 +115,7 @@ int removeCardFromDeck_SwapTest()
 
     if (deck->size != i || sourceCard != deck->cards[randomPosition] || destinationCard != deck->cards[i])
     {
-      printf("removeCardFromDeck_SizeTest failed!\n");
+      printf("removeCardFromDeck_SwapTest failed!\n");
       return 1;
     }
   }
@@ -165,7 +129,7 @@ int removeCardFromDeck_SizeTest()
   allocDeck();
   initialiseDeck();
 
-  for (int i = 51; i >= 0; i--) 
+  for (int i = (52*8 - 1); i >= 0; i--)
   {
     removeCardFromDeck(i);
     if (deck->size != i)
@@ -184,7 +148,7 @@ int initialiseDeck_SizeTest()
   allocDeck();
   initialiseDeck();
 
-  if (deck->size != 52) 
+  if (deck->size != 52 * 8)
   {
     printf("initialiseDeck_SizeTest failed!\n");
   }
@@ -193,15 +157,15 @@ int initialiseDeck_SizeTest()
   return 0;
 }
 
-int initialiseDeck_CardsTest() 
+int initialiseDeck_CardsTest()
 {
   allocDeck();
   initialiseDeck();
 
   int deckPosition = 0;
-  for (int i = 2; i < 10; i++) 
+  for (int i = 2; i < 10; i++)
   {
-    for (int j = 0; j < 4; j++) 
+    for (int j = 0; j < (4 * 8); j++)
     {
       if (deck->cards[deckPosition++] != i)
       {
@@ -212,17 +176,17 @@ int initialiseDeck_CardsTest()
   }
 
 
-  for (int j = 0; j < 16; j++) 
+  for (int j = 0; j < (16 * 8); j++)
   {
     if (deck->cards[deckPosition++] != 10)
     {
       printf("initialiseDeck_CardsTest failed!\n");
       return 1;
     }
-  }  
+  }
 
-  
-  for (int j = 0; j < 4; j++) 
+
+  for (int j = 0; j < (4 * 8); j++)
   {
     if (deck->cards[deckPosition++] != 11)
     {

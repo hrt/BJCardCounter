@@ -1,24 +1,4 @@
-#include "hand_lib.c"
-#include "card_lib.c"
-
-int updateHandWithCard_CardsTest();
-
-int main()
-{
-  initialRNG();
-  int someTestsFailed = 0;
-
-
-  someTestsFailed += updateHandWithCard_CardsTest();
-
-
-  if (!someTestsFailed)
-  {
-    printf("All Tests Passed!\n");
-  }
-  return 0;
-}
-
+#include "hand_lib_tests.h"
 
 int updateHandWithCard_CardsTest()
 {
