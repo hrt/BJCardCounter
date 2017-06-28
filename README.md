@@ -7,13 +7,17 @@ Example: ```b 10``` to burn a face card or ```b 11``` to burn a Ace
 
 ```s``` --- is the command to simulate NUMBER_OF_SIMULATIONS (default 10000000) playouts at the current state of the game and provides information
 Example:
+
 input :
 ```s```
 
 output :
-```EV       : -0.470%
+
+```
+EV       : -0.470%
 Playouts : 10000000
-left    : 416```
+left    : 416
+```
 
 EV represents the Expected Value for you
 Playouts represents the number of games simulated
